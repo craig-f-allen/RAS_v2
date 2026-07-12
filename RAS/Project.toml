@@ -1,0 +1,12 @@
+name = "RAS"
+uuid = "7569e9a3-dab9-4aa1-970b-97b85bf7f910"
+version = "0.1.0"
+authors = ["craig "]
+
+[deps]
+ModelingToolkit = "961ee093-0014-501f-94e3-6117800e7a78"
+XLSX = "fdbf4ff8-1666-58a4-91e7-1b58723a45e0"
+
+[compat]
+ModelingToolkit = "11.31.1"
+XLSX = "0.11.11"
