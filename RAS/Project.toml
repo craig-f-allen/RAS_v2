@@ -4,9 +4,11 @@ version = "0.1.0"
 authors = ["craig "]
 
 [deps]
+DifferentialEquations = "0c46a032-eb83-5123-abaf-570d42b7fbaa"
 ModelingToolkit = "961ee093-0014-501f-94e3-6117800e7a78"
 XLSX = "fdbf4ff8-1666-58a4-91e7-1b58723a45e0"
 
 [compat]
+DifferentialEquations = "8.0.2"
 ModelingToolkit = "11.31.1"
 XLSX = "0.11.11"

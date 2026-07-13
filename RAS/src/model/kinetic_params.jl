@@ -1,6 +1,8 @@
 using XLSX
 using Base.Iterators: drop
 
+# Warning to yee who enter here: some overloading trickery afoot in order to solve the problem of making one clean simulation using two different ways of dynamically calculating parameters. There may be simpler ways than this but this is type stable and clean.
+
 abstract type AbstractKineticParams end
 
 # ----------------------------------------------------------
