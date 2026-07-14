@@ -5,10 +5,16 @@ authors = ["craig "]
 
 [deps]
 DifferentialEquations = "0c46a032-eb83-5123-abaf-570d42b7fbaa"
+Latexify = "23fbe1c1-3f47-55db-b15f-69d7ec21a316"
 ModelingToolkit = "961ee093-0014-501f-94e3-6117800e7a78"
+Revise = "295af30f-e4ad-537b-8983-00126c2a3abe"
+SciCompDSL = "91a8cdf1-4ca6-467b-a780-87fda3fff15e"
 XLSX = "fdbf4ff8-1666-58a4-91e7-1b58723a45e0"
 
 [compat]
 DifferentialEquations = "8.0.2"
+Latexify = "0.16.10"
 ModelingToolkit = "11.31.1"
+Revise = "3.15.1"
+SciCompDSL = "1.0.1"
 XLSX = "0.11.11"
