@@ -43,6 +43,11 @@ using SciCompDSL
         GTP::Float64
         GDP::Float64
 
+        # Protein totals
+        TotalRAS::Float64
+        TotalEff::Float64
+        fract_mut::Float64
+
     end
     @variables begin
 
@@ -54,17 +59,17 @@ using SciCompDSL
         Mut_kdEff(t)
 
         # state variables
-        WT_RAS_GDP(t)       # WT RAS bound to GDP
-        WT_RAS_GTP(t)       # WT RAS bounds to GTP
-        WT_RAS_0(t)         # WT RAS unbound
+        WT_RAS_GDP(t) => (1.0-fract_mut)*TotalRAS   # WT RAS bound to GDP
+        WT_RAS_GTP(t) => 0                          #        WT RAS bounds to GTP
+        WT_RAS_0(t) => 0                            # WT RAS unbound
         
-        Mut_RAS_GDP(t)      # Mut RAS bound to GDP
-        Mut_RAS_GTP(t)      # Mut RAS bound to GTP
-        Mut_RAS_0(t)        # Mut RAS unbound
+        Mut_RAS_GDP(t) => fract_mut*TotalRAS        # Mut RAS bound to GDP
+        Mut_RAS_GTP(t) => 0                         # Mut RAS bound to GTP
+        Mut_RAS_0(t) => 0                           # Mut RAS unbound
 
-        Eff(t)              # Effector
-        WT_RAS_GTP_Eff(t)   # WT RAS bound to GTP and Eff
-        Mut_RAS_GTP_Eff(t)  # Mut RAS bound to GTP and Eff
+        Eff(t) => TotalEff                          # Effector
+        WT_RAS_GTP_Eff(t) => 0                      # WT RAS bound to GTP and Eff
+        Mut_RAS_GTP_Eff(t) => 0                     # Mut RAS bound to GTP and Eff
 
         # observable variables
         RAS_GTP_Eff_Total(t)

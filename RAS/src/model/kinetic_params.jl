@@ -118,7 +118,7 @@ function get_mutant_params(file_path::String)
                 convert(Float64, r[8]) * WT.kGDP,     # 7.  kGDP
                 convert(Float64, r[9]) * WT.KMGDP,    # 8.  KMGDP
                 convert(Float64, r[10]) * WT.KMGTP,   # 9.  KMGTP
-                convert(Float64, r[11]) * WT.kGTP,    # 10. kGTP (Evaluated via getproperty dynamically from WT)
+                convert(Float64, r[11]) * WT.kGTP,    # 10. kGTP
                 convert(Float64, r[12]) * WT.KD,      # 11. KD
                 convert(Float64, r[13]) * WT.kaEff    # 12. kaEff
             )
