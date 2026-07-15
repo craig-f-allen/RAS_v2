@@ -1,7 +1,3 @@
-using ModelingToolkit
-using ModelingToolkit: t_nounits as t, D_nounits as D
-using SciCompDSL
-
 @mtkmodel RAS_Base begin
     @parameters begin
 
@@ -59,17 +55,17 @@ using SciCompDSL
         Mut_kdEff(t)
 
         # state variables
-        WT_RAS_GDP(t) => (1.0-fract_mut)*TotalRAS   # WT RAS bound to GDP
-        WT_RAS_GTP(t) => 0                          #        WT RAS bounds to GTP
-        WT_RAS_0(t) => 0                            # WT RAS unbound
+        WT_RAS_GDP(t) = (1.0-fract_mut)*TotalRAS   # WT RAS bound to GDP
+        WT_RAS_GTP(t) = 0                          # WT RAS bounds to GTP
+        WT_RAS_0(t) =  0                            # WT RAS unbound
         
-        Mut_RAS_GDP(t) => fract_mut*TotalRAS        # Mut RAS bound to GDP
-        Mut_RAS_GTP(t) => 0                         # Mut RAS bound to GTP
-        Mut_RAS_0(t) => 0                           # Mut RAS unbound
+        Mut_RAS_GDP(t) = fract_mut*TotalRAS        # Mut RAS bound to GDP
+        Mut_RAS_GTP(t) = 0                         # Mut RAS bound to GTP
+        Mut_RAS_0(t) = 0                           # Mut RAS unbound
 
-        Eff(t) => TotalEff                          # Effector
-        WT_RAS_GTP_Eff(t) => 0                      # WT RAS bound to GTP and Eff
-        Mut_RAS_GTP_Eff(t) => 0                     # Mut RAS bound to GTP and Eff
+        Eff(t) = TotalEff                          # Effector
+        WT_RAS_GTP_Eff(t) = 0                      # WT RAS bound to GTP and Eff
+        Mut_RAS_GTP_Eff(t) = 0                     # Mut RAS bound to GTP and Eff
 
         # observable variables
         RAS_GTP_Eff_Total(t)
