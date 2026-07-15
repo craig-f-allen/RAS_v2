@@ -113,14 +113,14 @@ function get_mutant_params(file_path::String)
                 convert(Float64, r[3]) * WT.kdGDP,    # 2.  kdGDP
                 convert(Float64, r[4]) * WT.kdGTP,    # 3.  kdGTP
                 convert(Float64, r[5]) * WT.kaGDP,    # 4.  kaGDP
-                convert(Float64, r[6]) * WT.kcat,     # 5.  kcat
-                convert(Float64, r[7]) * WT.KM,       # 6.  KM
-                convert(Float64, r[8]) * WT.kGDP,     # 7.  kGDP
-                convert(Float64, r[9]) * WT.KMGDP,    # 8.  KMGDP
-                convert(Float64, r[10]) * WT.KMGTP,   # 9.  KMGTP
-                convert(Float64, r[11]) * WT.kGTP,    # 10. kGTP
-                convert(Float64, r[12]) * WT.KD,      # 11. KD
-                convert(Float64, r[13]) * WT.kaEff    # 12. kaEff
+                convert(Float64, r[7]) * WT.kcat,     # 6.  kcat
+                convert(Float64, r[8]) * WT.KM,       # 7.  KM
+                convert(Float64, r[9]) * WT.kGDP,     # 8.  kGDP
+                convert(Float64, r[10]) * WT.KMGDP,   # 9.  KMGDP
+                convert(Float64, r[11]) * WT.KMGTP,   # 10. KMGTP
+                convert(Float64, r[12]) * WT.kGTP,    # 11. kGTP
+                convert(Float64, r[13]) * WT.KD,      # 12. KD
+                convert(Float64, r[14]) * WT.kaEff    # 13. kaEff
             )
         end
         return mutants
