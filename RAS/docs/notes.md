@@ -1,6 +1,9 @@
 TODO
 #
 
-- Whend running WT WT simulation, the kassT for mutant WT is much different than for the kassT for actual WT. Investigate.
-- - the Mut kaGTP from the actual MutantKinetics type matches Python. The Mut_kaGTP int the SOL OBJECT doesnt!
+- IF CHANGING PARAMS THAT ARE USED FOR ICS: MUST USE u0 OBJECT AS WELL (can make function to construct it from params)
 
+Learnings
+# 
+- Need ROsenbrock23() as solver as it is a stiff system
+- If using DynamicSS need higher tolerances:sol = solve(prob, DynamicSS(Rosenbrock23()); abstol=1-12, reltol=1e-10)
