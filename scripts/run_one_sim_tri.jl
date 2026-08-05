@@ -8,8 +8,8 @@ using NonlinearSolve # For direct Newton solves
 const fract_mut = 0.25
 const mut = :G12V
 
-mutants_base = get_mutant_params("/home/craig/Documents/Projects/RAS_v2/RAS/data/kinetic_parameter_multipliers.xlsx")
-mutants_tri_drug = get_mutant_tri_drug_params("/home/craig/Documents/Projects/RAS_v2/RAS/data/kinetic_parameter_multipliers.xlsx")
+mutants_base = get_mutant_params("C:\\Users\\cfa13\\Projects\\RAS_v2\\RAS\\data\\kinetic_parameter_multipliers.xlsx")
+mutants_tri_drug = get_mutant_tri_drug_params("C:\\Users\\cfa13\\Projects\\RAS_v2\\RAS\\data\\kinetic_parameter_multipliers.xlsx")
 
 param_dict_base = build_params_for_base_ras(
     WT, mutants_base[mut], 
