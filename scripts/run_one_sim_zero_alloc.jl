@@ -21,7 +21,7 @@ param_dict_tri_drug = build_params_for_ras_tricomplex(
     WT, mutants_tri_drug[:WT], mutants_base[mut], mutants_tri_drug[mut],
     6e-11, 2e-10, 18e-6, 180e-6, 4e-7, 4e-7, 
     fract_mut,
-    4e-7, 1e-6, 
+    1e2, 1e-6, 
 )
 
 # Merge into a concrete vector of pairs
@@ -36,19 +36,17 @@ tspan = (0.0, 1e6)                  # Needed for ODE solver.
 odeprob = ODEProblem(sys, param_pairs, tspan)
 
 # Setup integrator. Instead fo solving the ODEProblem we initialize an integrator and use it in place to avoid allocations. DynamicSS cannot do this w/ zero alloc.
-integrator = init(odeprob, Rodas5P(); save_everystep=false, save_start=false, dense = false, abstol = 1e-12, reltol = 1e-10)
+integrator = init(odeprob, Rosenbrock23(); save_everystep=false, save_start=false, dense = false, abstol = 1e-12, reltol = 1e-10)
 
 # Preallocate buffers in memory for saving du. This prevents integrator from allocating memory during the solve.
-const n_states = length(integrator.u)  # Number of states in the system. Const for zero alloc.
+const n_states = length(integrator.u)       # Number of states in the system. Const for zero alloc.
 const du_buf = zeros(n_states)
-
-# Preallocate the drug index.
-const drug_idx = variable_index(sys, :Drug)  # Index of the drug variable in the state vector. Const for zero alloc.
+const u_reset = copy(integrator.u)          # Preallocate u reset to avoid allocations during reinit.
+const drug_idx = variable_index(sys, :Drug) # Index of the drug variable in the state vector. Const for zero alloc.
 
 # One alllocation steady state solver. This is a custom implementation of DynamicSS that uses the preallocated buffers to avoid allocations during the solve.
-function run_ss!(integrator, drug_dose, du_buf)
-    #integrator.u[drug_idx] = drug_dose # Set the drug dose in the integrator state vector.
-    reinit!(integrator, integrator.u; reinit_dae = false, reinit_cache = false, reset_dt = false, reinit_callbacks = false, reinit_retcode = true) # Update integrator u0.
+function run_ss!(integrator, du_buf, u_reset)
+    reinit!(integrator, u_reset; reinit_dae = false, reinit_cache = true, reset_dt = true, reinit_callbacks = false, reinit_retcode = true) # Update integrator u0.
 
     # Run the integrator until steady state is reached. This is a custom implementation of DynamicSS that uses the preallocated buffers to avoid allocations during the solve.
     for _ in 1:10_000
@@ -60,5 +58,8 @@ function run_ss!(integrator, drug_dose, du_buf)
     end
     return nothing
 end
+
+u_reset[drug_idx] = 1e-10 # Set the drug dose in the u_reset vector.
+run_ss!(integrator, du_buf, u_reset)
 
 

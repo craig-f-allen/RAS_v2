@@ -7,7 +7,7 @@ using SteadyStateDiffEq
 using ModelingToolkit
 
 # Set fract_mut
-fract_mut = 0.25
+const fract_mut = 0.25
 
 # Get mutant parameters
 mutants = get_mutant_params("/home/craig/Documents/Projects/RAS_v2/RAS/data/kinetic_parameter_multipliers.xlsx")

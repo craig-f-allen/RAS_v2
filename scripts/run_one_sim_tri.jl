@@ -8,24 +8,17 @@ using NonlinearSolve # For direct Newton solves
 const fract_mut = 0.25
 const mut = :G12V
 
-mutants_base = get_mutant_params("C:\\Users\\cfa13\\Projects\\RAS_v2\\RAS\\data\\kinetic_parameter_multipliers.xlsx")
 mutants_tri_drug = get_mutant_tri_drug_params("C:\\Users\\cfa13\\Projects\\RAS_v2\\RAS\\data\\kinetic_parameter_multipliers.xlsx")
-
-param_dict_base = build_params_for_base_ras(
-    WT, mutants_base[mut], 
-    6e-11, 2e-10, 18e-6, 180e-6, 4e-7, 4e-7, 
-    fract_mut
-)
 
 param_dict_tri_drug = build_params_for_ras_tricomplex(
     WT, mutants_tri_drug[:WT], mutants_base[mut], mutants_tri_drug[mut],
     6e-11, 2e-10, 18e-6, 180e-6, 4e-7, 4e-7, 
     fract_mut,
-    4e-7, 1e-6, 
+    1e-9, 1e-6, 
 )
 
 # Merge into a concrete vector of pairs
-param_pairs = Pair[k => v for (k, v) in merge(param_dict_base, param_dict_tri_drug)]
+param_pairs = Pair[k => v for (k, v) in param_dict_tri_drug]
 
 # Build MTK System
 @mtkbuild sys = RAS_Tricomplex()

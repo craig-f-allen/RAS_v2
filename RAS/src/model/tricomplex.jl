@@ -143,7 +143,7 @@
         R12 ~ Mut_kdGTP * Mut_RAS_GTP - (Mut_kaGTP * GTP) * Mut_RAS_0
         R13 ~ Mut_kaEff * Mut_RAS_GTP * Eff - Mut_kdEff * Mut_RAS_GTP_Eff
         R14 ~ Mut_kint * Mut_RAS_GTP_Eff
-        R15 ~ k_on_1*Drug - k_off_1*Bicomplex
+        R15 ~ k_on_1*Drug*CYPA - k_off_1*Bicomplex
         R16 ~ WT_k_on_tricomplex*Bicomplex*WT_RAS_GTP - WT_k_off_tricomplex*WT_Tricomplex
         R17 ~ Mut_k_on_tricomplex*Bicomplex*Mut_RAS_GTP - Mut_k_off_tricomplex*Mut_Tricomplex
 
