@@ -7,7 +7,7 @@ using NonlinearSolve # For direct Newton solves
 # -------------------------------------------------------------
 const fract_mut = 0.25
 const mut = :G12V
-const N_DRUG_DOSES = 10000
+const N_DRUG_DOSES = 1000
 
 mutants_base = get_mutant_params("C:\\Users\\cfa13\\Projects\\RAS_v2\\RAS\\data\\kinetic_parameter_multipliers.xlsx")
 mutants_tri_drug = get_mutant_tri_drug_params("C:\\Users\\cfa13\\Projects\\RAS_v2\\RAS\\data\\kinetic_parameter_multipliers.xlsx")
@@ -40,7 +40,7 @@ const n_threads = Threads.nthreads()    # Number of threads available for parall
 # Setup vector of prealloc integrators. Using let block to show odeprob is locally scoped, to ensure all integrators are independent to avoid heap alloc and GC.
 integrators = [
     let odeprob = ODEProblem(sys, param_pairs, tspan)
-        integrator = init(odeprob, Rosenbrock23(); save_everystep=false, save_start=false, dense = false, abstol = 1e-12, reltol = 1e-10)
+        integrator = init(odeprob, Rodas5P(); save_everystep=false, save_start=false, dense = false, abstol = 1e-8, reltol = 1e-6)
     end
     for _ in 1:n_threads
 ]
@@ -79,3 +79,5 @@ WT_RAS_GTP_Eff_idx = variable_index(sys, :WT_RAS_GTP_Eff) # Index of the RAS_GTP
 Mut_RAS_GTP_Eff_idx = variable_index(sys, :Mut_RAS_GTP_Eff) # Index of the RAS_GTP_Eff_Total variable in the state vector. Const for zero alloc.
 ys = [result[WT_RAS_GTP_Eff_idx]+result[Mut_RAS_GTP_Eff_idx] for result in results] # Extract the RAS_GTP_Eff_Total values from the results.
 plot(drug_doses, ys, xscale=:log10, xlabel="Drug Dose (M)", ylabel="RAS_GTP_Eff_Total", title="Drug Dose Response Curve", legend=false)
+
+
