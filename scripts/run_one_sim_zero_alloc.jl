@@ -31,7 +31,8 @@ param_pairs = Pair[k => v for (k, v) in merge(param_dict_base, param_dict_tri_dr
 @mtkbuild sys = RAS_Tricomplex()
 
 # Setup ODEProblem.
-const SS_ABSTOL = 1e-8              # Tolerance for steady state solver. Const for zero alloc.
+const SS_ABSTOL = 1e-16             # Absolute tolerance for steady state solver. Const for zero alloc.
+const SS_RELTOL = 1e-10             # Relative tolerance for steady state solver. Const for zero alloc.
 tspan = (0.0, 1e6)                  # Needed for ODE solver.
 odeprob = ODEProblem(sys, param_pairs, tspan)
 
@@ -44,22 +45,7 @@ const du_buf = zeros(n_states)
 const u_reset = copy(integrator.u)          # Preallocate u reset to avoid allocations during reinit.
 const drug_idx = variable_index(sys, :Drug) # Index of the drug variable in the state vector. Const for zero alloc.
 
-# One alllocation steady state solver. This is a custom implementation of DynamicSS that uses the preallocated buffers to avoid allocations during the solve.
-function run_ss!(integrator, du_buf, u_reset)
-    reinit!(integrator, u_reset; reinit_dae = false, reinit_cache = true, reset_dt = true, reinit_callbacks = false, reinit_retcode = true) # Update integrator u0.
-
-    # Run the integrator until steady state is reached. This is a custom implementation of DynamicSS that uses the preallocated buffers to avoid allocations during the solve.
-    for _ in 1:10_000
-        step!(integrator) # take integrator step
-        integrator.f(du_buf, integrator.u, integrator.p, integrator.t) # calculate du and store in preallocated buffer
-        if maximum(abs, du_buf) < SS_ABSTOL # if du is below tolerance, or approxumately zero, stop.
-            break
-        end
-    end
-    return nothing
-end
-
-u_reset[drug_idx] = 1e-10 # Set the drug dose in the u_reset vector.
-run_ss!(integrator, du_buf, u_reset)
+u_reset[drug_idx] = 1e5 # Set the drug dose in the u_reset vector.
+run_ss!(integrator, du_buf, u_reset, SS_ABSTOL, SS_RELTOL)
 
 

@@ -137,7 +137,7 @@ function get_mutant_tri_drug_params(file_path::String)
         sheet = f["TricomplexParams"]
         for r in drop(XLSX.eachrow(sheet), 1)
             mutants[Symbol(r[1])] = TriDrugKineticParams(
-                convert(Float64, r[2])
+                convert(Float64, r[2]) * 1e-9 # K_D_2 is given in nM; convert to M.
             )
         end
         return mutants
