@@ -13,7 +13,7 @@ fract_mut = 0.25
 mutants = get_mutant_params("/home/craig/Documents/Projects/RAS_v2/RAS/data/kinetic_parameter_multipliers.xlsx")
 
 # Build parameter dictionary
-param_dict = build_params_for_mtk(
+param_dict = build_params_for_base_ras(
     WT, mutants[:G13D], 
     6e-11, 2e-10, 18e-6, 180e-6, 4e-7, 4e-7, 
     fract_mut

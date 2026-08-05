@@ -1,4 +1,4 @@
-@mtkmodel RAS_Base begin
+@mtkmodel RAS_Tricomplex begin
     @parameters begin
 
         # WT params
@@ -91,6 +91,7 @@
         # observable variables
         RAS_GTP_Eff_Total(t)
         RAS_GTP_Total(t)
+        Tricomplex_Total(t)
 
         # rate expressions
         R1(t)
@@ -143,21 +144,28 @@
         R13 ~ Mut_kaEff * Mut_RAS_GTP * Eff - Mut_kdEff * Mut_RAS_GTP_Eff
         R14 ~ Mut_kint * Mut_RAS_GTP_Eff
         R15 ~ k_on_1*Drug - k_off_1*Bicomplex
-        R16 ~ k_on_2
+        R16 ~ WT_k_on_tricomplex*Bicomplex*WT_RAS_GTP - WT_k_off_tricomplex*WT_Tricomplex
+        R17 ~ Mut_k_on_tricomplex*Bicomplex*Mut_RAS_GTP - Mut_k_off_tricomplex*Mut_Tricomplex
 
         # rate equations
         D(WT_RAS_GDP) ~ -R1+R2+R3-R4+R7
-        D(WT_RAS_GTP) ~ R1-R2-R3-R5-R6
+        D(WT_RAS_GTP) ~ R1-R2-R3-R5-R6-R16
         D(WT_RAS_0) ~ R4+R5
         D(Eff) ~ -R6+R7-R13+R14
         D(WT_RAS_GTP_Eff) ~ R6-R7
         D(Mut_RAS_GDP) ~ -R8+R9+R10-R11+R14
-        D(Mut_RAS_GTP) ~ R8-R9-R10-R12-R13
+        D(Mut_RAS_GTP) ~ R8-R9-R10-R12-R13-R17
         D(Mut_RAS_0) ~ R11+R12
         D(Mut_RAS_GTP_Eff) ~ R13-R14
+        D(Drug) ~ -R15
+        D(CYPA) ~ -R15
+        D(Bicomplex) ~ R15-R16-R17
+        D(WT_Tricomplex) ~ R16
+        D(Mut_Tricomplex) ~ R17
 
         # observable equations
         RAS_GTP_Eff_Total ~ WT_RAS_GTP_Eff + Mut_RAS_GTP_Eff
         RAS_GTP_Total ~ WT_RAS_GTP_Eff + Mut_RAS_GTP_Eff + WT_RAS_GTP + Mut_RAS_GTP
+        Tricomplex_Total ~ WT_Tricomplex + Mut_Tricomplex
     end
 end

@@ -87,7 +87,7 @@ end
 # ------------------------------------------------------------------------------
 const vol_scale = 250
 
-# Initialized exactly in your specified order (excluding the virtual property :kGTP)
+# Initialized exactly in specified order (excluding the virtual property :kGTP)
 WT = WTKineticParams(
     3.5e-4,             # 1.  kint
     1.1e-4,             # 2.  kdGDP
@@ -106,7 +106,7 @@ WT = WTKineticParams(
 function get_mutant_params(file_path::String)
     mutants = Dict{Symbol, MutantKineticParams}()
     XLSX.openxlsx(file_path) do f
-        sheet = f["Sheet1"]
+        sheet = f["BaseParams"]
         for r in drop(XLSX.eachrow(sheet), 1)
             mutants[Symbol(r[1])] = MutantKineticParams(
                 convert(Float64, r[2]) * WT.kint,     # 1.  kint
@@ -121,6 +121,23 @@ function get_mutant_params(file_path::String)
                 convert(Float64, r[12]) * WT.kGTP,    # 11. kGTP
                 convert(Float64, r[13]) * WT.KD,      # 12. KD
                 convert(Float64, r[14]) * WT.kaEff    # 13. kaEff
+            )
+        end
+        return mutants
+    end
+end
+
+mutable struct TriDrugKineticParams
+    K_D_2::Float64
+end
+
+function get_mutant_tri_drug_params(file_path::String)
+    mutants = Dict{Symbol, TriDrugKineticParams}()
+    XLSX.openxlsx(file_path) do f
+        sheet = f["TricomplexParams"]
+        for r in drop(XLSX.eachrow(sheet), 1)
+            mutants[Symbol(r[1])] = TriDrugKineticParams(
+                convert(Float64, r[2])
             )
         end
         return mutants
