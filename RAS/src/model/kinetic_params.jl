@@ -1,6 +1,9 @@
 using XLSX
 using Base.Iterators: drop
 
+# Package-relative default so call sites don't need a hardcoded, machine-specific absolute path.
+const DEFAULT_KINETIC_PARAMS_PATH = joinpath(pkgdir(@__MODULE__), "data", "kinetic_parameter_multipliers.xlsx")
+
 # Warning to yee who enter here: some overloading trickery afoot in order to solve the problem of making one clean simulation using two different ways of dynamically calculating parameters. There may be simpler ways than this but this is type stable and clean.
 
 abstract type AbstractKineticParams end
@@ -103,7 +106,7 @@ WT = WTKineticParams(
     4.5e7               # 13. kaEff
 )
 
-function get_mutant_params(file_path::String)
+function get_mutant_params(file_path::String = DEFAULT_KINETIC_PARAMS_PATH)
     mutants = Dict{Symbol, MutantKineticParams}()
     XLSX.openxlsx(file_path) do f
         sheet = f["BaseParams"]
@@ -131,7 +134,7 @@ mutable struct TriDrugKineticParams
     K_D_2::Float64
 end
 
-function get_mutant_tri_drug_params(file_path::String)
+function get_mutant_tri_drug_params(file_path::String = DEFAULT_KINETIC_PARAMS_PATH)
     mutants = Dict{Symbol, TriDrugKineticParams}()
     XLSX.openxlsx(file_path) do f
         sheet = f["TricomplexParams"]

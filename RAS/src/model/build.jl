@@ -91,3 +91,21 @@ function build_params_for_ras_tricomplex(WT::RAS.WTKineticParams, WT_Drug::TriDr
 
     )
 end
+
+# Loads mutant kinetics for `mutant` from `xlsx_path`, builds and merges the base + tricomplex
+# param dicts, and returns them as a concrete Pair vector ready for ODEProblem(sys, param_pairs, tspan).
+# Shared by DoseResponseProblem/SingleSimProblem so both constructors don't duplicate this.
+function build_tricomplex_param_pairs(mutant::Symbol, fract_mut::Real;
+        GAP::Float64=6e-11, GEF::Float64=2e-10, GDP::Float64=18e-6, GTP::Float64=180e-6,
+        TotalRAS::Float64=4e-7, TotalEff::Float64=4e-7, Drug0::Float64=1e2, CYPA::Float64=1e-6,
+        xlsx_path::String=DEFAULT_KINETIC_PARAMS_PATH)
+    fm = Float64(fract_mut)
+    mutants_base     = get_mutant_params(xlsx_path)
+    mutants_tri_drug = get_mutant_tri_drug_params(xlsx_path)
+
+    pd_base = build_params_for_base_ras(WT, mutants_base[mutant], GAP, GEF, GDP, GTP, TotalRAS, TotalEff, fm)
+    pd_tri  = build_params_for_ras_tricomplex(WT, mutants_tri_drug[:WT], mutants_base[mutant], mutants_tri_drug[mutant],
+                                               GAP, GEF, GDP, GTP, TotalRAS, TotalEff, fm, Drug0, CYPA)
+
+    return Pair[k => v for (k, v) in merge(pd_base, pd_tri)]
+end
