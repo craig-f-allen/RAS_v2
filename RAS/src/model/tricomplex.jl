@@ -2,63 +2,63 @@
     @parameters begin
 
         # WT params
-        WT_kint::Float64
-        WT_kdGDP::Float64
-        WT_kdGTP::Float64
-        WT_kaGDP::Float64
-        WT_kaGTP::Float64   
-        WT_kcat::Float64
-        WT_KM::Float64
-        WT_kGDP::Float64
-        WT_KMGDP::Float64
-        WT_KMGTP::Float64
+        WT_kint
+        WT_kdGDP
+        WT_kdGTP
+        WT_kaGDP
+        WT_kaGTP   
+        WT_kcat
+        WT_KM
+        WT_kGDP
+        WT_KMGDP
+        WT_KMGTP
         # WT_kGTP is virtual
-        WT_KD::Float64
-        WT_kaEff::Float64
+        WT_KD
+        WT_kaEff
         # WT_kdEff is virtual
 
         # Mut params
-        Mut_kint::Float64
-        Mut_kdGDP::Float64
-        Mut_kdGTP::Float64
-        Mut_kaGDP::Float64
+        Mut_kint
+        Mut_kdGDP
+        Mut_kdGTP
+        Mut_kaGDP
         # kaGTP is virtual
-        Mut_kcat::Float64
-        Mut_KM::Float64
-        Mut_kGDP::Float64
-        Mut_KMGDP::Float64
-        Mut_KMGTP::Float64
-        Mut_kGTP::Float64     
-        Mut_KD::Float64
-        Mut_kaEff::Float64
+        Mut_kcat
+        Mut_KM
+        Mut_kGDP
+        Mut_KMGDP
+        Mut_KMGTP
+        Mut_kGTP     
+        Mut_KD
+        Mut_kaEff
         # kdEff is virtual
 
         # Static concentrations.
-        GEF::Float64
-        GAP::Float64
-        GTP::Float64
-        GDP::Float64
+        GEF
+        GAP
+        GTP
+        GDP
 
         # Protein totals
-        TotalRAS::Float64
-        TotalEff::Float64
-        fract_mut::Float64
+        TotalRAS
+        TotalEff
+        fract_mut
 
         # Drugging parameters
-        Drug_0::Float64
-        CYPA_0::Float64
-        k_on_1::Float64 = 1e7
-        K_D_1::Float64 = 195e-9
-        WT_K_D_2::Float64
-        Mut_K_D_2::Float64
-        WT_k_on_tricomplex::Float64 = 1e7
-        Mut_k_on_tricomplex::Float64 = 1e7
+        Drug_0
+        CYPA_0
+        k_on_1 = 1e7
+        K_D_1 = 195e-9
+        WT_K_D_2
+        Mut_K_D_2
+        WT_k_on_tricomplex = 1e7
+        Mut_k_on_tricomplex = 1e7
         
 
     end
     @variables begin
 
-        # dyanmically generated parameters.
+        # dynamically generated parameters.
         WT_kGTP(t)
         WT_kdEff(t)
         

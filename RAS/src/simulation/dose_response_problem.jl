@@ -16,19 +16,24 @@ function build_tricomplex_system(; force_rebuild::Bool=false)
 end
 
 # Bundles everything ensemble_run_ss!/drug_dose_response_ic50! need: one integrator/buffer set
-# per thread, the dose sweep, and scratch space for the response curve. Parametric on {S,Integ,
+# per thread, the dose sweep, and scratch space for the response curve. Parametric on {T,S,Integ,
 # RespIdx} so every field keeps its concrete type for a given instance - that's what keeps field
 # access (p.ys, p.integrators, ...) type-stable, the same reason SciML's own ODEProblem/
 # ODEIntegrator types are parametric. Downstream calls then allocate only what run_ss!'s step!
 # calls do (~1 small allocation per step - see run_ss.jl) - nothing extra from this layer.
-struct DoseResponseProblem{S, Integ, RespIdx}
+#
+# T is the working number type - Float64 for a normal solve, or a ForwardDiff.Dual when one of
+# the constructor's kwargs/overrides was seeded with one (see ic50_sensitivity.jl). It's inferred
+# from the built ODEProblem, never chosen by the caller, so this is the same struct/constructor/
+# pipeline for both cases: no separate "AD path" to keep in sync with the production one.
+struct DoseResponseProblem{T<:Real, S, Integ, RespIdx}
     sys::S
     integrators::Vector{Integ}
-    du_bufs::Vector{Vector{Float64}}
-    u_resets::Vector{Vector{Float64}}
-    results::Vector{Vector{Float64}}
+    du_bufs::Vector{Vector{T}}
+    u_resets::Vector{Vector{T}}
+    results::Vector{Vector{T}}
     doses::Vector{Float64}
-    ys::Vector{Float64}
+    ys::Vector{T}
     drug_idx::Int
     response_idxs::RespIdx
     ss_abstol::Float64
@@ -37,8 +42,9 @@ end
 
 function DoseResponseProblem(mutant::Symbol, fract_mut::Real;
         sys = build_tricomplex_system(),
-        GAP::Float64=6e-11, GEF::Float64=2e-10, GDP::Float64=18e-6, GTP::Float64=180e-6,
-        TotalRAS::Float64=4e-7, TotalEff::Float64=4e-7, Drug0::Float64=1e2, CYPA::Float64=1e-6,
+        GAP::Real=6e-11, GEF::Real=2e-10, GDP::Real=18e-6, GTP::Real=180e-6,
+        TotalRAS::Real=4e-7, TotalEff::Real=4e-7, Drug0::Real=1e2, CYPA::Real=1e-6,
+        overrides::AbstractDict{Symbol}=Dict{Symbol,Float64}(),
         dose_range::Tuple{<:Real,<:Real}=(1e-12, 1e4), n_doses::Int=1000,
         response_vars = (:WT_RAS_GTP_Eff, :Mut_RAS_GTP_Eff),
         alg = Rodas5P(), ode_abstol::Float64=1e-8, ode_reltol::Float64=1e-6,
@@ -47,7 +53,7 @@ function DoseResponseProblem(mutant::Symbol, fract_mut::Real;
         xlsx_path::String=DEFAULT_KINETIC_PARAMS_PATH)
 
     param_pairs = build_tricomplex_param_pairs(mutant, fract_mut;
-        GAP, GEF, GDP, GTP, TotalRAS, TotalEff, Drug0, CYPA, xlsx_path)
+        GAP, GEF, GDP, GTP, TotalRAS, TotalEff, Drug0, CYPA, overrides, xlsx_path)
 
     # One independent ODEProblem/integrator per thread - let-bound so each is locally scoped,
     # keeping threads from sharing mutable heap state.
@@ -59,14 +65,15 @@ function DoseResponseProblem(mutant::Symbol, fract_mut::Real;
         for _ in 1:n_threads
     ]
 
+    T = eltype(integrators[1].u)
     n_states = length(integrators[1].u)
-    du_bufs  = [zeros(n_states) for _ in 1:n_threads]
+    du_bufs  = [zeros(T, n_states) for _ in 1:n_threads]
     u_resets = [copy(integrators[1].u) for _ in 1:n_threads]
 
     lo, hi  = dose_range
     doses   = exp10.(range(log10(Float64(lo)), stop=log10(Float64(hi)), length=n_doses))
-    results = [zeros(n_states) for _ in 1:n_doses]
-    ys      = zeros(n_doses)
+    results = [zeros(T, n_states) for _ in 1:n_doses]
+    ys      = zeros(T, n_doses)
 
     drug_idx = variable_index(sys, :Drug)
     rv = response_vars isa Symbol ? (response_vars,) : response_vars

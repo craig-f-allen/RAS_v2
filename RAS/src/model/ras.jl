@@ -2,52 +2,52 @@
     @parameters begin
 
         # WT params
-        WT_kint::Float64
-        WT_kdGDP::Float64
-        WT_kdGTP::Float64
-        WT_kaGDP::Float64
-        WT_kaGTP::Float64   
-        WT_kcat::Float64
-        WT_KM::Float64
-        WT_kGDP::Float64
-        WT_KMGDP::Float64
-        WT_KMGTP::Float64
+        WT_kint
+        WT_kdGDP
+        WT_kdGTP
+        WT_kaGDP
+        WT_kaGTP   
+        WT_kcat
+        WT_KM
+        WT_kGDP
+        WT_KMGDP
+        WT_KMGTP
         # WT_kGTP is virtual
-        WT_KD::Float64
-        WT_kaEff::Float64
+        WT_KD
+        WT_kaEff
         # WT_kdEff is virtual
 
         # Mut params
-        Mut_kint::Float64
-        Mut_kdGDP::Float64
-        Mut_kdGTP::Float64
-        Mut_kaGDP::Float64
+        Mut_kint
+        Mut_kdGDP
+        Mut_kdGTP
+        Mut_kaGDP
         # kaGTP is virtual
-        Mut_kcat::Float64
-        Mut_KM::Float64
-        Mut_kGDP::Float64
-        Mut_KMGDP::Float64
-        Mut_KMGTP::Float64
-        Mut_kGTP::Float64     
-        Mut_KD::Float64
-        Mut_kaEff::Float64
+        Mut_kcat
+        Mut_KM
+        Mut_kGDP
+        Mut_KMGDP
+        Mut_KMGTP
+        Mut_kGTP     
+        Mut_KD
+        Mut_kaEff
         # kdEff is virtual
 
         # Static concentrations.
-        GEF::Float64
-        GAP::Float64
-        GTP::Float64
-        GDP::Float64
+        GEF
+        GAP
+        GTP
+        GDP
 
         # Protein totals
-        TotalRAS::Float64
-        TotalEff::Float64
-        fract_mut::Float64
+        TotalRAS
+        TotalEff
+        fract_mut
 
     end
     @variables begin
 
-        # dyanmically generated parameters.
+        # dynamically generated parameters.
         WT_kGTP(t)
         WT_kdEff(t)
         
